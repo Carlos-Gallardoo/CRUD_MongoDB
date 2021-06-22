@@ -1,0 +1,46 @@
+
+ <div class="col text-center" style="margin-bottom: 20px;">
+<h2> Lista de Productos</h2>
+<a class="btn btn-primary" href="/insertar">Insertar producto</a>
+</div>
+<table id="myTable" class="table table-stripped table-responsive-md btn-table">
+  <thead>
+    <tr>
+      <th scope="col">id</th>
+      <th scope="col">name</th>
+      <th scope="col">price</th>
+      <th scope="col">picture</th>
+      <th scope="col">category</th>
+      <th scope="col">description</th>
+        <th scope="col">options</th>
+    </tr>
+  </thead>
+  <tbody>
+      {{#products}}
+
+    <tr>
+  
+      <td>{{_id}}</td>
+    <td> {{name}}</td>
+    <td> {{price}}</td>
+    <td>{{picture}}  </td>
+     <td>{{category}}  </td>
+      <td> {{description}} </td>
+      
+      <td>
+      <form action="/api/product/{{_id}}" method="GET"> 
+      <button type="submit" class="btn btn-warning">Editar</button>
+      </form>
+      </td>
+        <td>
+      <form action="/api/product/{{_id}}?_method=delete" method="POST"> 
+       <button type="submit"  method='POST' class="btn btn-danger">Eliminar</button>
+      </form>
+      </td>
+      
+    </tr>
+    <tr>
+        {{/products}}
+   
+  </tbody>
+</table>
