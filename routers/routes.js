@@ -12,6 +12,18 @@ const router = express.Router();
 // export our router 
 module.exports = router;
 
+//metodo post  para el registro 
+const storeUserController = require('../controllers/storeUser');
+router.post('/auth/register',storeUserController)
+
+const newUserController = require('../controllers/newUser');
+router.get('/users/register',newUserController)
+
+const loginController = require('../controllers/login');
+router.get('/users/login', loginController);
+
+const loginUserController = require('../controllers/loginUser');
+router.post('/auth/login',loginUserController);
 
 router.get('/', (req, res)=>{
   //  res.status(200).send('hola mundo soy home');
@@ -92,13 +104,11 @@ const { ESRCH } = require('constants');
 router.delete('/api/product/:productId', deleteProduct);
 
 
-    router.get('/login', (req, res)=>{
-    res.status(200).send('hola mundo soy pagina login');
-    //res.render('home')
-     });
+
 
      router.use((req,res)=>{
         res.status(404).render('notfound');
         //res.render('notfound')
     });
+    
     
