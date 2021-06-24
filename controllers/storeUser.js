@@ -2,7 +2,7 @@
 
 const User = require('../models/user');
 const path = require('path');
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt-nodejs')
 module.exports = (req,res) =>{
 
 let user = new User();
