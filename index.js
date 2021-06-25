@@ -7,10 +7,12 @@ const app = express()
 const config = require('./config')
 const router = require('./routers/routes')
 const methodOverride = require('method-override')
+const path = require('path')
 app.use(express.urlencoded({extended:true}))
 app.use(express.json())
 
-app.use('/static', express.static ('public'))
+//app.use('/static', express.static('public'))
+app.use(express.static(path.resolve('./public')));
 
 //motor de vistas
 app.engine('.hbs', hbs({
@@ -33,14 +35,4 @@ mongoose.connect(config.db, config.urlParser, {
 app.listen(config.port, () =>{
     console.log('Ejecutando en  http://localhost:' + config.port)
 });
-//conexion a la base de datos y levantar servidor 
-/*mongoose.connect(config.db,(err,res )=>{
-        if(err){
-            return console.log('error al conectar con la BD ${err}')
-        }
-        console.log('conexion con la BD exitosa')
 
-        app.listen(config.port, ()=>{
-            console.log('servidor en linea ejecutandose en http://localhost:${config.port}')
-        });
-});*/

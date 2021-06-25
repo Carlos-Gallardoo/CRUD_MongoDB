@@ -1,5 +1,5 @@
 /* jshint esversion: 6 */
-
+//GALLARDO DUEÑAS CARLOS IVAN 16211997
 const express  = require('express');
 const path = require('path');
 const product = require('../models/product');
@@ -11,6 +11,7 @@ const router = express.Router();
 
 // export our router 
 module.exports = router;
+
 //activacion de las sesiones (cookies)
 router.use(session({
     secret: 'D$YTRH#%#$@^$#YR',
@@ -18,19 +19,22 @@ router.use(session({
     saveUninitialized: true,
     maxAge: Date.now() + (30 * 86400 * 1000),
 }));
+
 //Variables globales 
 router.use((req,res,next)=>{
     res.locals.loggedIn = req.session.userId || null;
     next()
 });
 
-//metodo post  para el registro 
-const storeUserController = require('../controllers/storeUser');
-router.post('/auth/register',redirectIfAuh, storeUserController)
-
+//metodos de REGISTRO
 const newUserController = require('../controllers/newUser');
 router.get('/users/register',redirectIfAuh, newUserController)
 
+const storeUserController = require('../controllers/storeUser');
+router.post('/auth/register',redirectIfAuh, storeUserController)
+
+
+//metodos de LOGIN
 const loginController = require('../controllers/login');
 router.get('/users/login',redirectIfAuh, loginController);
 
@@ -41,13 +45,14 @@ router.post('/auth/login',redirectIfAuh, loginUserController);
 const logoutController = require('../controllers/logout');
 router.get('/users/logout',logoutController);
 
-
+//pagina HOME
 router.get('/',authMiddleware, (req, res)=>{
-  //  res.status(200).send('hola mundo soy home');
   console.log(req.session)
     res.render('home')
     });
-//Consulta de todos los datos 
+
+
+//TODOS LOS PRODUCTOS
 router.get('/api/product',authMiddleware, (req,res) =>{
     product.find({}, (err, products) => {
         if(err) return res.status(500).send({
@@ -58,13 +63,10 @@ router.get('/api/product',authMiddleware, (req,res) =>{
             message: 'No existen los productos' 
         });
 
-       // res.status(200).send({ products: [products] });
-      // console.log(products);
        res.render('showProducts', {products})
     }).lean()
 
 });
-//GALLARDO DUEÑAS CARLOS IVAN 16211997
 
 //consulta por filtro 
 router.get('/api/product/:datoBusqueda',authMiddleware, (req,res) =>{
@@ -78,19 +80,18 @@ router.get('/api/product/:datoBusqueda',authMiddleware, (req,res) =>{
         if(!products) return res.status(404).send({
             message: 'No existe el producto' 
         });
-       // res.status(200).send({product:products});
         res.render('editar', {product: products})
     }).lean();
 
 });
 
-
+// VISTA INSERTAR PRODUCTO
 router.get('/insertar',authMiddleware, (req,res)=> {
      res.render('product');
    
 })
 
-//Insertar valores en la base de datos 
+//INSERTAR PRODUCTO 
 router.post('/api/product',authMiddleware, (req,res) => {
     let producto =  new product();
     producto.name = req.body.name;
@@ -110,18 +111,18 @@ router.post('/api/product',authMiddleware, (req,res) => {
     });
 });
 
-//modificar product PUT
+//MODIFICAR PRODUCTO
 const putProduct = require('../controllers/putProduct');
-
 router.put('/api/product/:productId',authMiddleware, putProduct);
 
 
-//borrar un registro DELETE 
+//BORRAR PRODUCTO
 const deleteProduct = require('../controllers/deleteProduct');
 const { ESRCH } = require('constants');
-
 router.delete('/api/product/:productId',authMiddleware, deleteProduct);
 
+
+//PAGINA NO ENCONTRADA
      router.use((req,res)=>{
         res.status(404).render('notfound');
         //res.render('notfound')
