@@ -5,7 +5,7 @@ const path = require('path');
 const product = require('../models/product');
 const session = require('express-session');
 const authMiddleware = require('../middleware/authMiddleware');
-
+const redirectIfAuh = require('../middleware/redirectIfAuth')
 //Create a router object
 const router = express.Router();
 
@@ -18,20 +18,29 @@ router.use(session({
     saveUninitialized: true,
     maxAge: Date.now() + (30 * 86400 * 1000),
 }));
-
+//Variables globales 
+router.use((req,res,next)=>{
+    res.locals.loggedIn = req.session.userId || null;
+    next()
+});
 
 //metodo post  para el registro 
 const storeUserController = require('../controllers/storeUser');
-router.post('/auth/register',storeUserController)
+router.post('/auth/register',redirectIfAuh, storeUserController)
 
 const newUserController = require('../controllers/newUser');
-router.get('/users/register',newUserController)
+router.get('/users/register',redirectIfAuh, newUserController)
 
 const loginController = require('../controllers/login');
-router.get('/users/login', loginController);
+router.get('/users/login',redirectIfAuh, loginController);
 
 const loginUserController = require('../controllers/loginUser');
-router.post('/auth/login',loginUserController);
+router.post('/auth/login',redirectIfAuh, loginUserController);
+
+//metodo LOGOUT 
+const logoutController = require('../controllers/logout');
+router.get('/users/logout',logoutController);
+
 
 router.get('/',authMiddleware, (req, res)=>{
   //  res.status(200).send('hola mundo soy home');
